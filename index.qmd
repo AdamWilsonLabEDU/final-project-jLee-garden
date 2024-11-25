@@ -72,11 +72,9 @@ Distance to the nearest road, distance to the nearest airport, area of land use 
 
 ### Import libraries
 ```{r}
-library(lubridate)
 library(dplyr)
 library(sf)
 library(ggplot2)
-library(leaflet)
 library(tibble)
 library(rstudioapi)
 # Setting directory
@@ -88,7 +86,7 @@ setwd(dirname(getActiveDocumentContext()$path))
 #### Data manipulation
 ```{r}
 # Download 2023 daily pm2.5 data
-epa_data <- read.csv("./data/ad_viz_plotval_data.csv")
+epa_data <- read.csv("/data/ad_viz_plotval_data.csv")
 
 # Create a new data
 pm_daily <- data.frame(Date= mdy(epa_data$Date)) # parse with year, month and day
