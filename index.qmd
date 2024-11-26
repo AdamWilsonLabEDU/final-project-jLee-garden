@@ -1,113 +1,229 @@
 ---
-title: "My Final Project Template"
-author: Your name here
-subtitle: Subtitle here if desired
+title: "Air pollutation(PM2.5) modeling in NY"
+author: Jeongwon Lee
+subtitle: Which areas in New York are most affected by air pollution, and why?
 date: today
 date-format: long
 ---
 
 # Introduction
 
-\[\~ 200 words\]
+## What is PM 2.5?
 
-Clearly stated background and questions / hypotheses / problems being addressed. Sets up the analysis in an interesting and compelling way. Include figures if you like.
+The PM refers to particulate matter which composed of solid particles and liquid droplets found in the air (EPA). They vary in size but especially PM 2.5 stands for particles with diameters that are generally 2.5 micrometers and smaller (EPA). Considering a single hair from humans is 50-70 micrometers, they can cause harmful effect on our health, getting deep down into lungs and even into blood system due to its significant small size (EPA). In fact, various research has reported adverse health effects of exposure to PM2.5 (Dadvand et al., 2013).
 
-# Materials and methods
+![](https://www.epa.gov/sites/default/files/styles/huge/public/2016-09/pm2.5_scale_graphic-color_2.jpg?itok=OfzlGVH4){fig-align="center" width="441"}
 
-\[\~ 200 words\]
+## Why is small-scale PM2.5 estimation important despite national monitoring centers?
 
-Narrative: Clear narrative description of the data sources and methods. Includes data from at least two sources that were integrated / merged in R.
+The PM2.5 is a pollutant, monitored by EPA and measured at fixed air quality monitoring stations in the National Ambient Air Quality Standards (NAAQS) compliance monitoring network. Generally, measurement from only one or two monitoring sites represent the PM2.5 level of whole urban area. However, air pollution exhibits **spatial variability** because of the locations and strengths of local sources, the effect of street canyons and complex terrain, and urban heat island effects (Masiol et al., 2018). When it comes to limited spatial coverage and accuracy, it can cause biased strategies for improving public health or may underestimate health effect. Therefore, it is crucial to estimate and predict accurate PM2.5 level to overcome these limitations.
 
-Code: The code associated with the project is well organized and easy to follow. Demonstrates mastery of R graphics and functions.
+# Methods
 
-Data: The underlying data are publicly accessible via the web and downloaded/accessed within the Rmd script. If you want to use your own data, you must make it available on a website (e.g. Figshare) so that others are able to re-run your code.
+One of approach to indirectly measure air pollution is using a land use regression model. The land use regression model is based on an idea that ambient air pollution is impacted by surrounding environment. It incorporates monitoring data and land-use variables to provide improved exposure estimates (Masiol et al., 2018).
 
-You can do bullets like this:
+The major procedure of developing land use regression model includes four steps:
 
--   The first most important thing
--   The second most important thing
--   The third most important thing
+1.  **First, we collect measurement at the designated locations of human exposure.**
 
-You can do numbers like this:
+2.  **Next, we also collect comprehensive number of GIS and other variables that relate to air pollution, such as traffic density, road networks, and land uses.**
 
-1.  The first most important thing
-2.  The second most important thing
-3.  The third most important thing
+3.  **We are going to apply statistical method to explain the variations of the measured data and to evaluate the prediction ability of the model.**
 
-See <http://rmarkdown.rstudio.com/> for all the amazing things you can do.
+4.  **Once the model has been evaluated with good performance, we are going to use it to predict outdoor air pollution level at the locations of interest.**
 
-Here's my first code chunk.
+Based on literature review, this study determined predictor variables:
+
+Distance to the nearest road, distance to the nearest airport, the nubmer of air pollution sources (facilities), area of land use types (industrial, commerce, residential, agriculture land, cropland, forest land), NDVI (Normalized Difference Vegetation Index), which is a metric used to measure the health and density of vegetation within circular buffers (100-300 m). Moreover, we also consider meteological factors, which are temperature and humidity, known for having related correlation with PM 2.5 (Masiol et al., 2018).
+
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| variable       | variable name                                            | data source                                                                                          |
++================+==========================================================+======================================================================================================+
+| Response (Y)   | daily PM2.5                                              | <https://aqs.epa.gov/aqsweb/documents/data_api.html>                                                 |
+|                |                                                          |                                                                                                      |
+|                |                                                          | <https://www.epa.gov/outdoor-air-quality-data/download-daily-data>                                   |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| Predictors (X) | distance to the nearest road from network                | <https://services6.arcgis.com/EbVsqZ18sv1kVJ3k/arcgis/rest/services/NYS_Streets/FeatureServer>       |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | distance to the nearest airport                          | <https://services1.arcgis.com/SR1muQK0r6SVF2nb/arcgis/rest/services/NYS_Airports_view/FeatureServer> |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | number of Air Title V Permits ATV (air pollution source) | <https://data.gis.ny.gov/datasets/4f1f53ba97934e1cafaf68a11f7c489f/explore>                          |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of industrial                                       | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of commerce                                         | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of residential                                      | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of agricultural land                                | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of cropland                                         | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of forest land                                      | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | NDVI                                                     | <https://modis.gsfc.nasa.gov/data/dataprod/mod13.php>                                                |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | daily temperature                                        | <https://www.epa.gov/hydrowq/meteorological-data-new-york>                                           |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | daily humidity                                           | <https://www.epa.gov/hydrowq/meteorological-data-new-york>                                           |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+
+# Implementation
+
+## Part 1. Data processing
+
+### Import libraries
 
 ```{r}
-x=3+4
+library(terra)
+library(lubridate)
+library(dplyr)
+library(sf)
+library(ggplot2)
+library(tibble)
+library(rstudioapi)
+library(readr)
+# Setting directory
+#setwd(dirname(getActiveDocumentContext()$path))
 ```
 
-Refer to output in your narrative like this: x=`r x` .
+### Daily to annual average PM2.5 level
 
-Load any required packages in a code chunk (you may need to install some packages):
+#### Data manipulation
+```{r}
+# Download 2023 daily pm2.5 data
+epa_data <- read_csv("data/ad_viz_plotval_data.csv")
 
-```{r, message=F, warning=F}
-library(tidyverse)
-library(leaflet)
-library(kableExtra)
-library(htmlwidgets)
-library(widgetframe)
-knitr::opts_chunk$set(widgetframe_widgets_dir = 'widgets' ) 
-knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling
+# Create a new data
+pm_daily <- data.frame(Date= mdy(epa_data$Date)) # parse with year, month and day
+
+pm_daily <- cbind(pm_daily, epa_data %>% select("Site ID", "Daily Mean PM2.5 Concentration", "Local Site Name", "County FIPS Code", "County", "Site Latitude", "Site Longitude"))
+colnames(pm_daily) <- c("Date", "SiteID", "DailyMeanPm2.5Concentration", "LocalSiteName", "CountyFIPSCode", "County", "SiteLatitude", "SiteLongitude")
+
+# Get annual average concentration
+pm_annual <- pm_daily %>%
+  group_by(SiteID) %>%
+  summarise(AnnualMeanPM2.5 = mean(DailyMeanPm2.5Concentration, na.rm = TRUE)) %>%
+  left_join(
+    pm_daily %>% distinct(SiteID, .keep_all = TRUE) %>% select(-c(Date, DailyMeanPm2.5Concentration)))
 ```
 
-## Download and clean all required data
+#### Mapping the annual data
 
 ```{r}
-n=20
-data=data.frame(x=runif(n,-180,180),
-                y=runif(n,-60,60),
-                size = runif(n, 5, 20),
-                category = factor(
-                  sample(letters[1:5], n, replace = TRUE)
-                  ),
-                value = rnorm(n))
+# Convert annual data into a spatial data
+pm_annual.sf <- st_as_sf(pm_annual, coords = c("SiteLongitude","SiteLatitude"),  crs = 4326)
+
+library(mapview)
+mapview(pm_annual.sf, zcol = "AnnualMeanPM2.5", legend = TRUE, layer.name = "Annual Mean<br>PM2.5 (µg/m³)")
 ```
 
-```{r, results='asis'}
-data %>% 
-  slice(1:10) %>% #show only 1:n rows
-  kable(digits=2,align="c")%>% #make table and round to two digits
-  kable_styling(bootstrap_options = 
-                  c("striped", "hover", "condensed", "responsive")) #apply other formatting
+### Calculate distance from surrounding environment
+
+#### Importing data
+
+```{r}
+## Road
+road <- st_read("data/")
+
+## Air pollution source facilities (title V)
+facilities <- st_read("data/Air_Title_V_Permits_ATV.shp")
+
+## Airports
+airports <- st_read("data/USA_airports.shp")
 ```
 
-Add any additional processing steps here.
+#### Importing land-use data
+
+```{r}
+## land-cover
+
+## canopy
+
+```
+
+#### Buffer
+
+```{r}
+
+
+
+```
+
+#### Distance 
+
+```{r}
+
+
+
+```
+
+## Part 2. Statisticial analysis
+
+### Selecting predictors (univariate regression)
+
+```{r}
+
+
+```
+
+### Exploring correlation between predictors (Pearson's correlation)
+
+```{r}
+
+
+```
+
+### Developing land use regression (Multivariate regression)
+
+```{r}
+
+
+```
 
 # Results
 
-\[\~200 words\]
+<!-- \[\~200 words\] -->
 
-Tables and figures (maps and other graphics) are carefully planned to convey the results of your analysis. Intense exploration and evidence of many trials and failures. The author looked at the data in many different ways before coming to the final presentation of the data.
+<!-- Tables and figures (maps and other graphics) are carefully planned to convey the results of your analysis. Intense exploration and evidence of many trials and failures. The author looked at the data in many different ways before coming to the final presentation of the data. -->
 
-Show tables, plots, etc. and describe them.
+<!-- Show tables, plots, etc. and describe them. -->
 
-```{r, fig.width=6, fig.height=3, fig.cap="Map of completely random data"}
-m <- leaflet(data) %>% 
-  addTiles() %>% 
-  addCircleMarkers(~x, ~y, radius = ~size,color = ~as.factor(category)) %>% 
-  addPopups(~x[2], ~y[2], "Random popup")
-m  # a map with the default OSM tile layer
-```
+<!-- ```{r, fig.width=6, fig.height=3, fig.cap="Map of completely random data"} -->
 
-```{r}
-data %>% 
-  ggplot(aes(x=x,y=y,col=category))+
-  geom_point()
-```
+<!-- m <- leaflet(data) %>%  -->
 
-### Dygraphs Example
+<!--   addTiles() %>%  -->
 
-```{r}
-library(dygraphs)
-dygraph(nhtemp, main = "New Haven Temperatures") |> 
-  dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01")) 
-```
+<!--   addCircleMarkers(~x, ~y, radius = ~size,color = ~as.factor(category)) %>%  -->
+
+<!--   addPopups(~x[2], ~y[2], "Random popup") -->
+
+<!-- m  # a map with the default OSM tile layer -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+
+<!-- data %>%  -->
+
+<!--   ggplot(aes(x=x,y=y,col=category))+ -->
+
+<!--   geom_point() -->
+
+<!-- ``` -->
+
+<!-- ### Dygraphs Example -->
+
+<!-- ```{r} -->
+
+<!-- library(dygraphs) -->
+
+<!-- dygraph(nhtemp, main = "New Haven Temperatures") |>  -->
+
+<!--   dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01"))  -->
+
+<!-- ``` -->
 
 # Conclusions
 
@@ -117,4 +233,8 @@ Clear summary adequately describing the results and putting them in context. Dis
 
 # References
 
-All sources are cited in a consistent manner
+Dadvand, Payam, et al. "Maternal exposure to particulate air pollution and term birth weight: a multi-country evaluation of effect and heterogeneity." *Environmental health perspectives*121.3 (2013): 267-373.
+
+EPA. "Particualte Matter Basics". <https://www.epa.gov/pm-pollution/particulate-matter-pm-basics>
+
+Masiol, Mauro, et al. "Hourly land-use regression models based on low-cost PM monitor data." *Environmental research*167 (2018): 7-14.
