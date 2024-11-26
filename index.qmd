@@ -24,94 +24,139 @@ One of approach to indirectly measure air pollution is using a land use regressi
 
 The major procedure of developing land use regression model includes four steps:
 
-1.  First, we collect measurement at the designated locations of human exposure.
+1.  **First, we collect measurement at the designated locations of human exposure.**
 
-2.  Next, we also collect comprehensive number of GIS and other variables that relate to air pollutions, such as traffic density, road networks, and land uses.
+2.  **Next, we also collect comprehensive number of GIS and other variables that relate to air pollution, such as traffic density, road networks, and land uses.**
 
-3.  We are going to apply statistical method to explain the variations of the measured data and to evaluate the prediction ability of the model.
+3.  **We are going to apply statistical method to explain the variations of the measured data and to evaluate the prediction ability of the model.**
 
-4.  Once the model has been evaluated with good performance, we are going to use it to predict outdoor air pollution level at the locations of interest.
+4.  **Once the model has been evaluated with good performance, we are going to use it to predict outdoor air pollution level at the locations of interest.**
 
 Based on literature review, this study determined predictor variables:
 
-Distance to the nearest road, distance to the nearest airport, area of land use types (industrial, commerce, residential, agriculture land, cropland, forest land), NDVI (Normalized Difference Vegetation Index), which is a metric used to measure the health and density of vegetation within circular buffers (100-300 m). Moreover, we also consider metalogical factors, which are temperature and humidity, known for having related correlation with PM 2.5 (Masiol et al., 2018).
+Distance to the nearest road, distance to the nearest airport, the nubmer of air pollution sources (facilities), area of land use types (industrial, commerce, residential, agriculture land, cropland, forest land), NDVI (Normalized Difference Vegetation Index), which is a metric used to measure the health and density of vegetation within circular buffers (100-300 m). Moreover, we also consider meteological factors, which are temperature and humidity, known for having related correlation with PM 2.5 (Masiol et al., 2018).
 
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-| variable       | variable name                             | data source                                                                                          |
-+================+===========================================+======================================================================================================+
-| Response (Y)   | daily PM2.5                               | <https://aqs.epa.gov/aqsweb/documents/data_api.html>                                                 |
-|                |                                           |                                                                                                      |
-|                |                                           | <https://www.epa.gov/outdoor-air-quality-data/download-daily-data>                                   |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-| Predictors (X) | distance to the nearest road from network | <https://services6.arcgis.com/EbVsqZ18sv1kVJ3k/arcgis/rest/services/NYS_Streets/FeatureServer>       |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | distance to the nearest airpot            | <https://services1.arcgis.com/SR1muQK0r6SVF2nb/arcgis/rest/services/NYS_Airports_view/FeatureServer> |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | area of industrial                        | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | area of commerce                          | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | area of residential                       | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | area of agricultural land                 | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | area of cropland                          | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | area of forest land                       | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | NDVI                                      | <https://modis.gsfc.nasa.gov/data/dataprod/mod13.php>                                                |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | daily temperature                         | <https://www.epa.gov/hydrowq/meteorological-data-new-york>                                           |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
-|                | daily humidity                            | <https://www.epa.gov/hydrowq/meteorological-data-new-york>                                           |
-+----------------+-------------------------------------------+------------------------------------------------------------------------------------------------------+
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| variable       | variable name                                            | data source                                                                                          |
++================+==========================================================+======================================================================================================+
+| Response (Y)   | daily PM2.5                                              | <https://aqs.epa.gov/aqsweb/documents/data_api.html>                                                 |
+|                |                                                          |                                                                                                      |
+|                |                                                          | <https://www.epa.gov/outdoor-air-quality-data/download-daily-data>                                   |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+| Predictors (X) | distance to the nearest road from network                | <https://services6.arcgis.com/EbVsqZ18sv1kVJ3k/arcgis/rest/services/NYS_Streets/FeatureServer>       |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | distance to the nearest airport                          | <https://services1.arcgis.com/SR1muQK0r6SVF2nb/arcgis/rest/services/NYS_Airports_view/FeatureServer> |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | number of Air Title V Permits ATV (air pollution source) | <https://data.gis.ny.gov/datasets/4f1f53ba97934e1cafaf68a11f7c489f/explore>                          |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of industrial                                       | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of commerce                                         | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of residential                                      | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of agricultural land                                | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of cropland                                         | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | area of forest land                                      | <https://www.usgs.gov/centers/eros/science/national-land-cover-database>                             |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | NDVI                                                     | <https://modis.gsfc.nasa.gov/data/dataprod/mod13.php>                                                |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | daily temperature                                        | <https://www.epa.gov/hydrowq/meteorological-data-new-york>                                           |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
+|                | daily humidity                                           | <https://www.epa.gov/hydrowq/meteorological-data-new-york>                                           |
++----------------+----------------------------------------------------------+------------------------------------------------------------------------------------------------------+
 
 # Implementation
 
 ## Part 1. Data processing
 
 ### Import libraries
+
 ```{r}
+library(lubridate)
 library(dplyr)
 library(sf)
 library(ggplot2)
 library(tibble)
 library(rstudioapi)
+library(readr)
 # Setting directory
-setwd(dirname(getActiveDocumentContext()$path))
+#setwd(dirname(getActiveDocumentContext()$path))
 ```
 
 ### Daily to annual average PM2.5 level
 
 #### Data manipulation
+
 ```{r}
 # Download 2023 daily pm2.5 data
-epa_data <- read.csv("/data/ad_viz_plotval_data.csv")
+epa_data <- read_csv("data/ad_viz_plotval_data.csv")
 
 # Create a new data
 pm_daily <- data.frame(Date= mdy(epa_data$Date)) # parse with year, month and day
 
-pm_daily <- cbind(pm_daily, epa_data %>% select("Site.ID", "Daily.Mean.PM2.5.Concentration", "Local.Site.Name", "County.FIPS.Code", "County", "Site.Latitude", "Site.Longitude"))
+pm_daily <- cbind(pm_daily, epa_data %>% select("Site ID", "Daily Mean PM2.5 Concentration", "Local Site Name", "County FIPS Code", "County", "Site Latitude", "Site Longitude"))
+colnames(pm_daily) <- c("Date", "SiteID", "DailyMeanPm2.5Concentration", "LocalSiteName", "CountyFIPSCode", "County", "SiteLatitude", "SiteLongitude")
 
 # Get annual average concentration
 pm_annual <- pm_daily %>%
-  group_by(Site.ID) %>%
-  summarise(Annual.Mean.PM25 = mean(Daily.Mean.PM2.5.Concentration, na.rm = TRUE)) %>%
+  group_by(SiteID) %>%
+  summarise(AnnualMeanPM2.5 = mean(DailyMeanPm2.5Concentration, na.rm = TRUE)) %>%
   left_join(
-    pm_daily %>% distinct(Site.ID, .keep_all = TRUE) %>% select(-c(Date, Daily.Mean.PM2.5.Concentration)), by = "Site.ID")
+    pm_daily %>% distinct(SiteID, .keep_all = TRUE) %>% select(-c(Date, DailyMeanPm2.5Concentration)))
 ```
 
 #### Mapping the annual data
+
 ```{r}
 # Convert annual data into a spatial data
-pm_annual.sf <- st_as_sf(pm_annual, coords = c("Site.Longitude","Site.Latitude"),  crs = 4326)
+pm_annual.sf <- st_as_sf(pm_annual, coords = c("SiteLongitude","SiteLatitude"),  crs = 4326)
 
 library(mapview)
-mapview(pm_annual.sf, zcol = "Annual.Mean.PM25", legend = TRUE, layer.name = "Annual Mean PM2.5 (µg/m³)")
+mapview(pm_annual.sf, zcol = "AnnualMeanPM2.5", legend = TRUE, layer.name = "Annual Mean<br>PM2.5 (µg/m³)")
 ```
 
-### Calculate distnance from surrounding environemnts 
+### Calculate distance from surrounding environment
 
+#### Importing data
+
+```{r}
+## Road
+road <- st_read("data/")
+
+## Air pollution source facilities (title V)
+facilities <- st_read("data/Air_Title_V_Permits_ATV.shp")
+
+## Airports
+airports <- st_read("data/USA_airports.shp")
+```
+
+#### Importing land-use data
+
+```{r}
+## land-cover
+
+## canopy
+
+```
+
+#### Buffer
+
+```{r}
+
+
+
+```
+
+#### Distance 
+
+```{r}
+
+
+
+```
 
 ## Part 2. Statisticial analysis
 
@@ -145,25 +190,39 @@ mapview(pm_annual.sf, zcol = "Annual.Mean.PM25", legend = TRUE, layer.name = "An
 <!-- Show tables, plots, etc. and describe them. -->
 
 <!-- ```{r, fig.width=6, fig.height=3, fig.cap="Map of completely random data"} -->
+
 <!-- m <- leaflet(data) %>%  -->
+
 <!--   addTiles() %>%  -->
+
 <!--   addCircleMarkers(~x, ~y, radius = ~size,color = ~as.factor(category)) %>%  -->
+
 <!--   addPopups(~x[2], ~y[2], "Random popup") -->
+
 <!-- m  # a map with the default OSM tile layer -->
+
 <!-- ``` -->
 
 <!-- ```{r} -->
+
 <!-- data %>%  -->
+
 <!--   ggplot(aes(x=x,y=y,col=category))+ -->
+
 <!--   geom_point() -->
+
 <!-- ``` -->
 
 <!-- ### Dygraphs Example -->
 
 <!-- ```{r} -->
+
 <!-- library(dygraphs) -->
+
 <!-- dygraph(nhtemp, main = "New Haven Temperatures") |>  -->
+
 <!--   dyRangeSelector(dateWindow = c("1920-01-01", "1960-01-01"))  -->
+
 <!-- ``` -->
 
 # Conclusions
