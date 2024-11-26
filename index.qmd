@@ -75,6 +75,7 @@ Distance to the nearest road, distance to the nearest airport, the nubmer of air
 ### Import libraries
 
 ```{r}
+library(terra)
 library(lubridate)
 library(dplyr)
 library(sf)
@@ -89,7 +90,6 @@ library(readr)
 ### Daily to annual average PM2.5 level
 
 #### Data manipulation
-
 ```{r}
 # Download 2023 daily pm2.5 data
 epa_data <- read_csv("data/ad_viz_plotval_data.csv")
