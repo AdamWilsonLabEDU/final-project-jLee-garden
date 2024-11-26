@@ -25,13 +25,9 @@ jobs:
 
       - name: Install R
         uses: r-lib/actions/setup-r@v2
-      - name: Install R packages
-        run: Rscript -e "install.packages('terra')"
-      - name: Install R packages
-        run: Rscript -e "install.packages('sf')"
-      - name: Install R packages
-        run: Rscript -e "install.packages('mapview')"
 
+      - name: Install R packages
+        run: Rscript -e "options(repos = c(CRAN = 'https://cloud.r-project.org')); install.packages(c('terra', 'sf', 'mapview'))"
 
       - name: Install R Dependencies
         uses: r-lib/actions/setup-renv@v2
